@@ -25,19 +25,27 @@ app.delete('/pruebasDelete/:id', (req,res)=>{
 
 'use strict'
 
+
 require ('./config/config');
 var express = require('express');
-var cors =require ('cors');
 var app = express ();
+var cors = require ('cors');
 var bodyParser = require ('body-parser');
 
+/**
+ * #FlyQuotes no poner el body parser despues de cargar la ruta del express
+ * si no, no carga la informacion del json.
+ */
+//body-parser
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.json());
+
+//configurar express
+app.use(require('./routes/user.routes'))
 
 //configurar CORS
 app.use(cors());
 
-//body-parser
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(bodyParser.json());
 
 //rutas base
 
@@ -46,4 +54,3 @@ app.listen(process.env.PORT, () => {
     console.log (`El servidor esta corriendo en localhost:${process.env.PORT}`);
     })
 
-module.exports = app;

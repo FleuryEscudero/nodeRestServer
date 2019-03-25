@@ -14,7 +14,7 @@
 
  var mongoose = require ('mongoose');
  
- mongoose.connect('mongodb://localhost:27017/musify', { useNewUrlParser: true })
+ mongoose.connect('mongodb://localhost:27017/curso', { useNewUrlParser: true })
  
      .then (() => {
      console.log ('La conexion a MongoDb se ha realizado correctamente!');
