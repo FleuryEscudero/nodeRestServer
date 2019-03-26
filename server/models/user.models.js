@@ -49,6 +49,18 @@ let validRole = {
 
  }); 
 
+
+ /**
+  * Para quitar la contraseña en el retorno de informacion de guardado.
+  */
+ 
+ userSchema.methods.toJSON = function() {
+     let user = this;
+     let userObject = user.toObject();
+     delete userObject.password;
+     return userObject;
+ }
+
  userSchema.plugin(uniqueValidator, {
      message: '{PATH} debe de ser unico'
  });
