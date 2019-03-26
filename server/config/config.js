@@ -13,10 +13,21 @@
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
+/**
+ * Vencimiento de token
+ * 60 segundos * 60 min * 24 hrs * 30 dias
+ */ 
+ process.env.CADUCIDAD_TOKEN = 60*60*24*30;
+
+/**
+ * Seed sign
+ */
+
+process.env.SEED_SIGN = process.env.SEED_SIGN || 'devSeed';
+
  /**
   * DB
   */
-
 
  var mongoose = require ('mongoose');
 

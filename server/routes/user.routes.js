@@ -1,11 +1,12 @@
 
 var express = require('express');
-var app = express ();
-const User = require ('../models/user.models');
 var bcrypt=require('bcrypt');
 var _ = require('underscore');
+const User = require ('../models/user.models');
+var { ensureAuth,validateRole } = require ('../middlewares/authentication');
+var app = express ();
 
-    app.get('/getUser/', (req,res)=>{
+    app.get('/getUser', ensureAuth, (req,res) => {
 
         /**
          * Para limitar la paginacion se pusieron parametros opcionales por ejemplo el since que se pone en la url con un
@@ -20,7 +21,7 @@ var _ = require('underscore');
          * el nombre de los campos que queremos mostrar dentro de la respuesta de la consulta
          */
        User.find({ estado:true }, 'name email')
-            .skip(since)
+            .skip (since)
             .limit (limit)
             .exec((err,users )=>{
                 if(err){
@@ -47,7 +48,7 @@ var _ = require('underscore');
         })
     })
 
-    app.post('/addUser', (req,res)=>{
+    app.post('/addUser',[ensureAuth, validateRole], (req,res)=>{
         
         let body = req.body;
 
@@ -76,7 +77,7 @@ var _ = require('underscore');
     });      
     
 
-    app.put('/updateUser/:id', (req,res)=>{
+    app.put('/updateUser/:id',[ensureAuth, validateRole], (req,res)=>{
         let id = req.params.id; 
         /**
          * pick de la funcion underscore nos sirve para seleccionar de un objeto los valores que quiero ocupar en este caso
@@ -107,7 +108,7 @@ var _ = require('underscore');
         })
     })
 
-    app.delete('/deleteUser/:id', (req,res)=>{
+    app.delete('/deleteUser/:id',[ensureAuth, validateRole], (req,res)=>{
         let id = req.params.id; 
         let cStatus = {
             estado:false
