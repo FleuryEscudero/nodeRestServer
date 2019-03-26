@@ -40,6 +40,17 @@ if (process.env.NODE_ENV === 'dev') {
     urlDB = process.env.MONGO_URI
 }
 
+/**
+ * google Client Id
+ */
+
+process.env.CLIENT_ID = process.env.CLIENT_ID  || '52030871120-s2esnnhujfn5afjfodf1auu7daf2por0.apps.googleusercontent.com';
+
+
+/**
+ * Conexion base de datos
+ */
+
  mongoose.connect(urlDB, { useNewUrlParser: true,  useCreateIndex: true })
  
      .then (() => {
