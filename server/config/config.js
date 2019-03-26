@@ -26,7 +26,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 if (process.env.NODE_ENV === 'dev') {
     urlDB = 'mongodb://localhost:27017/curso'
 } else {
-    urlDB = 'mongodb+srv://fly:Escudero@cluster0-wtloj.mongodb.net/cafe'
+    urlDB = process.env.MONGO_URI
 }
 
  mongoose.connect(urlDB, { useNewUrlParser: true,  useCreateIndex: true })
