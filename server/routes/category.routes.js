@@ -3,11 +3,14 @@
 var express = require('express');
 var _ = require('underscore');
 const Category = require ('../models/category.models');
-var { ensureAuth } = require ('../middlewares/authentication');
+var { ensureAuth,validateRole } = require ('../middlewares/authentication');
 var app = express ();
 
 app.get('/categories',ensureAuth, (req,res)=>{
-    Category.find({status:true}).exec((err,categories)=>{
+    Category.find({status:true})
+    .sort('description')
+    .populate('user', 'name email')
+    .exec((err,categories)=>{
         if(err){
             return res.status(400).json({
                 ok: false,
@@ -25,6 +28,7 @@ app.get('/categories',ensureAuth, (req,res)=>{
 app.get('/category/:id',ensureAuth, (req,res)=>{
     let id = req.params.id;
     Category.findById(id,{ status:true})
+    .populate('user', ' name email')
     .exec((err,category)=>{
         if(err){
             return res.status(400).json({
@@ -52,6 +56,12 @@ app.post('/addCategory',ensureAuth, (req,res)=>{
                     err
                 });
             }
+            if(!categoryDb){
+                return res.status(400).json({
+                    ok:false,
+                    err
+                })
+            }
             res.json({
                 ok: true,
                 caterory:categoryDb
@@ -69,9 +79,14 @@ app.put('/updateCategory/:id',ensureAuth, (req,res)=>{
             res.status(400).json({
                ok: false,
                err
-           });
-           
-       }         
+           });  
+       }      
+        if(!categoryDb){
+            return res.status(400).json({
+                ok:false,
+                err
+            })
+        }    
        res.json({
            ok: true,
           user: categoryDb
@@ -80,7 +95,7 @@ app.put('/updateCategory/:id',ensureAuth, (req,res)=>{
 })
 
 
-app.delete('/deleteCategory/:id',(req,res)=>{
+app.delete('/deleteCategory/:id',[ensureAuth,validateRole],(req,res)=>{
     let id = req.params.id;
     let nStatus = { status:false};
 
@@ -100,7 +115,7 @@ app.delete('/deleteCategory/:id',(req,res)=>{
         }
         res.json({
             ok: true,
-            vategory: categoryDeleted
+            category: categoryDeleted
         });
     })
 })
